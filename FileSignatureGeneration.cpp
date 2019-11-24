@@ -10,6 +10,7 @@
 #include <cstdlib>
 using namespace std;
 
+
 int main()
 {
 	string inputfilename;
@@ -27,9 +28,6 @@ int main()
 	path = path + "\\";
 	auto sizestr = std::to_string(sizeint);
 	std::cout << "Full path: " << path + inputfilename << "\t your size: " << sizestr << std::endl;
-
-
-
 
 	std::string inputFileName;
 	std::string outputFileName;

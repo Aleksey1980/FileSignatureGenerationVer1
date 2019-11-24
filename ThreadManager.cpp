@@ -27,7 +27,7 @@ ThreadManager::ThreadManager(size_t threadsNumber) :
 				mStopFlag = true;
 				mCv.notify_all();
 				std::cout << "\nThreadManager threadTask() exception caught: " << e.what() << std::endl;
-				std::exit(EXIT_FAILURE);
+				//std::exit(EXIT_FAILURE);
 			}
 		}
 	};
@@ -42,7 +42,7 @@ ThreadManager::ThreadManager(size_t threadsNumber) :
 			mStopFlag = true;
 			mCv.notify_all();
 			std::cout << "\nThreadManager mThreads.emplace_back() exception caught: " << e.what() << std::endl;
-			std::exit(EXIT_FAILURE);
+			//std::exit(EXIT_FAILURE);
 		}
 	}
 }
@@ -60,11 +60,17 @@ ThreadManager::~ThreadManager()
 	}
 }
 
-std::future<size_t> ThreadManager::processDataBlock(std::string&& inputData)
+//std::future<size_t> ThreadManager::processDataBlock(std::string&& inputData)
+std::future<size_t> ThreadManager::processDataBlock(std::vector<char>&& inputData)
 {
 	auto calcHash = std::make_shared<std::packaged_task<size_t()>>([input = std::move(inputData)]()
 	{
-		return std::hash<std::string>()(input);
+		//return std::hash<std::string>()(input);
+		std::size_t ret = 0;
+		for (auto& i : input) {
+			ret ^= std::hash<uint32_t>()(i);
+		}		
+		return ret;
 	});
 	auto result = calcHash->get_future();
 	{

@@ -25,7 +25,8 @@ public:
 	void post();
 	void finish();
 	bool isFinished();
-	bool getDataBlock(std::string& dataBlock);
+//	bool getDataBlock(std::string& dataBlock);
+	bool getDataBlock(std::vector<char>& dataBlock);
 
 private:
 	std::ifstream mFin;
@@ -36,6 +37,6 @@ private:
 	std::mutex mMutex;
 	std::atomic<bool> mStopFlag;
 	bool mIsFinised;
-	std::queue<std::string> mDataBlockQueue;
+	std::queue<std::vector<char>> mDataBlockQueue; //std::queue<std::string> mDataBlockQueue;
 };
 #endif // READER_H

@@ -24,8 +24,17 @@ Writer::~Writer()
 
 bool Writer::openFile()
 {
-	mFout.open(mFileName, std::ios::out | std::ios::binary);
-	return mFout.is_open();
+	try
+	{
+		mFout.open(mFileName, std::ios::out | std::ios::binary);
+		return mFout.is_open();
+	}
+	catch (const std::exception & e)
+	{
+		mStopFlag = true;
+		std::cout << "Error: open file exception: " << e.what() << std::endl;
+		return false;
+	}
 }
 
 void Writer::start()
@@ -59,7 +68,9 @@ void Writer::start()
 		{
 			mStopFlag = true;
 			std::cout << "\nWriter write() exception caught: " << e.what() << std::endl;
-			std::exit(EXIT_FAILURE);
+			//std::exit(EXIT_FAILURE);
+			mThread.join();
+			throw;
 		}
 	};
 	mThread = std::thread(write);

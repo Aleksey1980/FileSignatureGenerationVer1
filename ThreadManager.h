@@ -16,7 +16,7 @@ class ThreadManager
 public:
 	ThreadManager(size_t threadsNumber);
 	~ThreadManager();
-	std::future<size_t> processDataBlock(std::string&& input);
+	std::future<size_t> processDataBlock(std::vector<char>&& input); //std::future<size_t> processDataBlock(std::string&& input);
 	ThreadManager() = delete;
 	ThreadManager(const ThreadManager&) = delete;
 	ThreadManager(ThreadManager&&) = delete;

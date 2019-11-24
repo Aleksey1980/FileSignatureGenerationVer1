@@ -19,7 +19,7 @@ void SignatureGenerator::calcSignature()
 	{
 		while (!mFileReader.isFinished() || !mFileWriter.isFinished())
 		{
-			std::string dataBlock;
+			std::vector<char> dataBlock; //std::string dataBlock;
 			if (mFileReader.getDataBlock(dataBlock))
 			{
 				auto futureHash = mThreadPool.processDataBlock(std::move(dataBlock));
@@ -35,6 +35,7 @@ void SignatureGenerator::calcSignature()
 		mFileReader.stop();
 		mFileWriter.stop();
 		std::cout << "\nSignatureGenerator calcSignature() exception caught: " << e.what() << std::endl;
-		std::exit(EXIT_FAILURE);
+		//std::exit(EXIT_FAILURE);
+		return;
 	}
 }

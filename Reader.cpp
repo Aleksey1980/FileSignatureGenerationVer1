@@ -25,9 +25,18 @@ Reader::~Reader()
 
 bool Reader::openFile()
 {
-	mFin.open(mFileName, std::ios::in | std::ios::binary);
-	mFin.unsetf(std::ios::skipws);
-	return mFin.is_open();
+	try
+	{
+		mFin.open(mFileName, std::ios::in | std::ios::binary);
+		mFin.unsetf(std::ios::skipws);
+		return mFin.is_open();
+	}
+	catch(const std::exception & e)
+	{
+		mStopFlag = true;
+		std::cout << "Error: open file exception: " << e.what() << std::endl;
+		return false;
+	}
 }
 
 void Reader::start()
@@ -43,7 +52,7 @@ void Reader::start()
 					break;
 				}
 				mSem.wait();
-				std::string readData;
+				std::vector<char> readData; //std::string readData;
 				readData.assign(mBlockSize, 0);
 				mFin.read(&readData.at(0), static_cast<int>(mBlockSize));
 				{
@@ -58,7 +67,10 @@ void Reader::start()
 		{
 			mStopFlag = true;
 			std::cout << "\nReader read() exception caught: " << e.what() << std::endl;
-			std::exit(EXIT_FAILURE);
+			//std::exit(EXIT_FAILURE);
+			mThread.join();
+			throw;
+
 		}
 		mIsFinised = true;
 	};
@@ -91,7 +103,8 @@ bool Reader::isFinished()
 	return mIsFinised && mDataBlockQueue.empty();
 }
 
-bool Reader::getDataBlock(std::string& dataBlock)
+//bool Reader::getDataBlock(std::string& dataBlock)
+bool Reader::getDataBlock(std::vector<char>& dataBlock)
 {
 	bool returnValue = false;
 	try
@@ -109,7 +122,7 @@ bool Reader::getDataBlock(std::string& dataBlock)
 		mStopFlag = true;
 		mIsFinised = true;
 		std::cout << "\nReader getDataBlock() exception caught: " << e.what() << std::endl;
-		std::exit(EXIT_FAILURE);
+		return returnValue;
 	}
 	return returnValue;
 }
